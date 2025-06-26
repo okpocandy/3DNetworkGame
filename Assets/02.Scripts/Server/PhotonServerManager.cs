@@ -96,8 +96,8 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         Dictionary<int, Player> roomPlayers = PhotonNetwork.CurrentRoom.Players;
         foreach (KeyValuePair<int, Player> player in roomPlayers)
         {
-            Debug.Log($"{player.Value.NickName} : {player.Value.ActorNumber}");
-            // ActorNumber = Room안에서의 플레이어에 대한 판별 ID - 들어온 순서대로 매겨짐
+        Debug.Log($"{player.Value.NickName} : {player.Value.ActorNumber}");
+        // ActorNumber = Room안에서의 플레이어에 대한 판별 ID - 들어온 순서대로 매겨짐짐
         }
     }
 

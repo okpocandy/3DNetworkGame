@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class PlayerAttackAbility : MonoBehaviour
+public class PlayerAttackAbility : PlayerAbility
 {
+
     private Animator _animator;
 
     [SerializeField]
-    private float _attackCooltime = 0.6f;
     private float _attackTimer = 0f;
 
     private const string ATTACK1 = "attack1";
@@ -19,9 +19,14 @@ public class PlayerAttackAbility : MonoBehaviour
 
     private void Update()
     {
+        if(!_photonView.IsMine)
+        {
+            return;
+        }
+        
         _attackTimer += Time.deltaTime;
 
-        if(_attackTimer < _attackCooltime)
+        if(_attackTimer < (1f / _owner.Stat.AttackSpeed))
         {
             return;
         }

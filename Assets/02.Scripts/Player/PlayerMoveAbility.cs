@@ -2,7 +2,7 @@ using System;
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerMoveAbility : PlayerAbility, IPunObservable
+public class PlayerMoveAbility : PlayerAbility
 {
 
     private CharacterController _characterController;
@@ -38,27 +38,14 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
-        
-        // PhotonAnimatorView 파라미터 동기화 설정
-        PhotonAnimatorView photonAnimatorView = GetComponent<PhotonAnimatorView>();
-        if (photonAnimatorView != null)
-        {
-            // 올바른 파라미터 이름으로 동기화 설정
-            photonAnimatorView.SetParameterSynchronized(IS_MOVE, PhotonAnimatorView.ParameterType.Bool, PhotonAnimatorView.SynchronizeType.Continuous);
-            photonAnimatorView.SetParameterSynchronized(HORIZONTAL, PhotonAnimatorView.ParameterType.Float, PhotonAnimatorView.SynchronizeType.Continuous);
-            photonAnimatorView.SetParameterSynchronized(VERTICAL, PhotonAnimatorView.ParameterType.Float, PhotonAnimatorView.SynchronizeType.Continuous);
-            photonAnimatorView.SetParameterSynchronized(JUMP, PhotonAnimatorView.ParameterType.Trigger, PhotonAnimatorView.SynchronizeType.Discrete);
-            photonAnimatorView.SetParameterSynchronized(IS_GROUNDED, PhotonAnimatorView.ParameterType.Bool, PhotonAnimatorView.SynchronizeType.Continuous);
-            photonAnimatorView.SetParameterSynchronized(IS_DASHING, PhotonAnimatorView.ParameterType.Bool, PhotonAnimatorView.SynchronizeType.Continuous);
-        }
     }
 
     private void Update()
     {
         if(!_photonView.IsMine)
         {
-            transform.position = Vector3.Lerp(transform.position, _receivedPosition, Time.deltaTime * _lerpSpeed);
-            transform.rotation = Quaternion.Slerp(transform.rotation, _receivedRotation, Time.deltaTime * _lerpSpeed);
+            //transform.position = Vector3.Lerp(transform.position, _receivedPosition, Time.deltaTime * _lerpSpeed);
+            //transform.rotation = Quaternion.Slerp(transform.rotation, _receivedRotation, Time.deltaTime * _lerpSpeed);
             return;
         }
 
@@ -140,6 +127,7 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
     // 데이터 동기화를 위한 데이터 전송 및 수신 기능
     // stream : 서버에서 주고받을 데이터가 담겨있는 변수
     // info   : 송수신 성공/실패 여부에 대한 로그
+    /*
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if(stream.IsWriting && _photonView.IsMine)
@@ -156,4 +144,5 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
 
         }
     }
+    */
 }

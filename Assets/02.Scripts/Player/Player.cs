@@ -53,6 +53,13 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
             
             MiniMapPlayerIcon.SetActive(true);
             MiniMapEnemyIcon.SetActive(false);
+
+            // 플레이어 스탯 UI 설정
+            var uiPlayerStat = GameObject.FindAnyObjectByType<UI_PlayerStat>();
+            if(uiPlayerStat != null)
+            {
+                uiPlayerStat.SetPlayer(this);
+            }
         }
         else
         {

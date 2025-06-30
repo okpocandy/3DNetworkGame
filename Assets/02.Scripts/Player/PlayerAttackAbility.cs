@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerAttackAbility : PlayerAbility
 {
+    public Collider WeaponCollider;
 
     private Animator _animator;
 
@@ -16,6 +17,8 @@ public class PlayerAttackAbility : PlayerAbility
     private void Start()
     {
         _animator = GetComponent<Animator>();
+
+        DeActiveCollider();
     }
 
     // - 위치/회전처럼 상시로 확인이 필요한 데이터 동기화: IPunObservable(OnPhotonSerializeView)
@@ -46,9 +49,39 @@ public class PlayerAttackAbility : PlayerAbility
         }
     }
 
+    public void ActiveCollider()
+    {
+        WeaponCollider.enabled = true;
+    }
+
+    public void DeActiveCollider()
+    {
+        WeaponCollider.enabled = false;
+    }
+
     [PunRPC]
     private void PlayAttackAnimation(int randomNumber)
     {
         _animator.SetTrigger($"attack{randomNumber}");
+    }
+
+    public void Hit(Collider other)
+    {
+        // 내 캐릭터가 아니면 무시
+        if(_photonView.IsMine == false)
+        {
+            return;
+        }
+
+        // 끄지 않는다면 Hit가 여러번 호출될 수 있다.
+        DeActiveCollider();
+
+        // RPC로 호출해야지 다른 사람의 게임오브젝트들도 이 함수가 실행된다.
+        // damagedObject.Damaged(_owner.Stat.Damage);
+
+        // 데미지를 받는 오브젝트의 데미지 처리
+        if(other.GetComponent<IDamaged>() == null) return;
+        PhotonView otherPhotonView = other.GetComponent<PhotonView>();
+        otherPhotonView.RPC(nameof(Player.Damaged), RpcTarget.All, _owner.Stat.Damage);
     }
 }

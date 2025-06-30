@@ -1192,9 +1192,11 @@ GameObject:
   - component: {fileID: 2734961281850817322}
   - component: {fileID: 1322742582398497935}
   - component: {fileID: 3872994624112279621}
+  - component: {fileID: 580358840949993524}
+  - component: {fileID: 1296404404594209671}
   m_Layer: 0
   m_Name: OHS03
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1267,6 +1269,39 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &580358840949993524
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3368508245795299728}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.39174208, y: 1.4156286, z: 0.08912745}
+  m_Center: {x: 0.000000104592246, y: 0.5035896, z: 0.000000016971562}
+--- !u!114 &1296404404594209671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3368508245795299728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b516948c0782c054180ac3d8b47c2ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3408125247047013171
 GameObject:
   m_ObjectHideFlags: 0
@@ -4017,10 +4052,10 @@ MonoBehaviour:
     Name: attack3
   - Type: 4
     SynchronizeType: 1
-    Name: isGronded
+    Name: isDashing
   - Type: 4
     SynchronizeType: 1
-    Name: isDashing
+    Name: isGrounded
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -4043,13 +4078,15 @@ MonoBehaviour:
     JumpForce: 2.5
     RoationSpeed: 300
     AttackSpeed: 1
+    Damage: 20
     MaxStamina: 100
+    Stamina: 100
     StaminaRecoverySpeed: 20
     StaminaRunCost: 10
     StaminaJumpCost: 10
     StaminaAttackCost: 20
     MaxHealth: 100
-  _currentStamina: 0
+    Health: 100
   StaminaBar: {fileID: 3571067119340210665}
   HealthBar: {fileID: 3695797654396907237}
   MiniMapEnemyIcon: {fileID: 7279445413482806923}
@@ -4093,6 +4130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88efdc6a81d0754196e8c60081ea166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WeaponCollider: {fileID: 580358840949993524}
   _attackTimer: 0
 --- !u!114 &7373714989717469303
 MonoBehaviour:

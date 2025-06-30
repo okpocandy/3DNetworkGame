@@ -38,6 +38,19 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
+        
+        // PhotonAnimatorView 파라미터 동기화 설정
+        PhotonAnimatorView photonAnimatorView = GetComponent<PhotonAnimatorView>();
+        if (photonAnimatorView != null)
+        {
+            // 올바른 파라미터 이름으로 동기화 설정
+            photonAnimatorView.SetParameterSynchronized(IS_MOVE, PhotonAnimatorView.ParameterType.Bool, PhotonAnimatorView.SynchronizeType.Continuous);
+            photonAnimatorView.SetParameterSynchronized(HORIZONTAL, PhotonAnimatorView.ParameterType.Float, PhotonAnimatorView.SynchronizeType.Continuous);
+            photonAnimatorView.SetParameterSynchronized(VERTICAL, PhotonAnimatorView.ParameterType.Float, PhotonAnimatorView.SynchronizeType.Continuous);
+            photonAnimatorView.SetParameterSynchronized(JUMP, PhotonAnimatorView.ParameterType.Trigger, PhotonAnimatorView.SynchronizeType.Discrete);
+            photonAnimatorView.SetParameterSynchronized(IS_GROUNDED, PhotonAnimatorView.ParameterType.Bool, PhotonAnimatorView.SynchronizeType.Continuous);
+            photonAnimatorView.SetParameterSynchronized(IS_DASHING, PhotonAnimatorView.ParameterType.Bool, PhotonAnimatorView.SynchronizeType.Continuous);
+        }
     }
 
     private void Update()

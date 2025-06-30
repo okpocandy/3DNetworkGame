@@ -5,13 +5,9 @@ using Unity.Mathematics;
 using RainbowArt.CleanFlatUI;
 using Photon.Pun;
 
-public class Player : MonoBehaviour, IPunObservable
+public class Player : MonoBehaviour, IPunObservable, IDamaged
 {
     public PlayerStat Stat;
-
-    private float _currentHealth;
-    [SerializeField]
-    private float _currentStamina;
 
     private Dictionary<Type, PlayerAbility> _abilitiesCache = new();
 
@@ -31,8 +27,8 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Awake()
     {
-        _currentHealth = Stat.MaxHealth;
-        _currentStamina = Stat.MaxStamina;
+        Stat.Health = Stat.MaxHealth;
+        Stat.Stamina = Stat.MaxStamina;
         _myMoveAbility = GetComponent<PlayerMoveAbility>();
         _myCharacterController = GetComponent<CharacterController>();
         _photonView = GetComponent<PhotonView>();
@@ -41,9 +37,9 @@ public class Player : MonoBehaviour, IPunObservable
     private void Start()
     {
         StaminaBar.MaxValue = Stat.MaxStamina;
-        StaminaBar.CurrentValue = _currentStamina;
+        StaminaBar.CurrentValue = Stat.Stamina;
         HealthBar.MaxValue = Stat.MaxHealth;
-        HealthBar.CurrentValue = _currentHealth;
+        HealthBar.CurrentValue = Stat.Health;
 
 
         if(_photonView.IsMine)
@@ -100,19 +96,19 @@ public class Player : MonoBehaviour, IPunObservable
 
     public bool TryConsumeStamina(float amount)
     {
-        if(_currentStamina < 0)
+        if(Stat.Stamina < 0)
         {
             throw new Exception("스테미너 감소량이 0보다 작을 수 없다");
         }
-        if(_currentStamina - amount < 0)
+        if(Stat.Stamina - amount < 0)
         {
             Debug.Log("스테미나 부족");
             return false;
         }
-        _currentStamina -= amount;
+        Stat.Stamina -= amount;
 
         // 스테미나 바 업데이트
-        StaminaBar.CurrentValue = _currentStamina;
+        StaminaBar.CurrentValue = Stat.Stamina;
 
         return true;
     }
@@ -123,16 +119,16 @@ public class Player : MonoBehaviour, IPunObservable
             throw new Exception("스테미너 감소량이 0보다 작을 수 없다");
 
         float cost = amount * Time.deltaTime;
-        if (_currentStamina < cost)
+        if (Stat.Stamina < cost)
         {
             Debug.Log("스태미나 부족");
             return false;
         }
 
-        _currentStamina -= cost;
+        Stat.Stamina -= cost;
 
         // 스테미나 바 업데이트
-        StaminaBar.CurrentValue = _currentStamina;
+        StaminaBar.CurrentValue = Stat.Stamina;
         
         return true;
     }
@@ -144,8 +140,8 @@ public class Player : MonoBehaviour, IPunObservable
         {
             Debug.Log("스테미너 회복량이 0보다 작을 수 없다.");
         }
-        _currentStamina = math.min(_currentStamina + amount, Stat.MaxStamina);
-        StaminaBar.CurrentValue = _currentStamina;
+        Stat.Stamina = math.min(Stat.Stamina + amount, Stat.MaxStamina);
+        StaminaBar.CurrentValue = Stat.Stamina;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -153,16 +149,25 @@ public class Player : MonoBehaviour, IPunObservable
         if(stream.IsWriting && _photonView.IsMine)
         {
             // 데이터를 전송한느 상황 -> 데이터를 보내주면 되고 (보내는 순서대로)
-            stream.SendNext(_currentStamina);
-            stream.SendNext(_currentHealth);
+            stream.SendNext(Stat.Stamina);
+            stream.SendNext(Stat.Health);
         }
         else if(stream.IsReading && !_photonView.IsMine)
         {
             // 데이터를 수신하는 상황 - 받은 데이터를 세텅하면 된다. (받을 수 있다.)
-            _currentStamina = (float)stream.ReceiveNext();
-            _currentHealth = (float)stream.ReceiveNext();
-            StaminaBar.CurrentValue = _currentStamina;
-            HealthBar.CurrentValue = _currentHealth;
+            Stat.Stamina = (float)stream.ReceiveNext();
+            Stat.Health = (float)stream.ReceiveNext();
+            StaminaBar.CurrentValue = Stat.Stamina;
+            HealthBar.CurrentValue = Stat.Health;
         }
+    }
+
+    [PunRPC]
+    public void Damaged(float damage)
+    {
+        Stat.Health = Mathf.Max(0, Stat.Health - damage);
+        HealthBar.CurrentValue = Stat.Health;
+
+        Debug.Log($"남은 체력 : {Stat.Health}");
     }
 }

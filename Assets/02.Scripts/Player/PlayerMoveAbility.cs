@@ -49,6 +49,11 @@ public class PlayerMoveAbility : PlayerAbility
             return;
         }
 
+        if(_owner.State == EPlayerState.Death)
+        {
+            return;
+        }
+
         // 대쉬
         Dash();
 

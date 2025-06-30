@@ -4,16 +4,26 @@ using System;
 using Unity.Mathematics;
 using RainbowArt.CleanFlatUI;
 using Photon.Pun;
+using Unity.VisualScripting;
+using System.Collections;
+
+public enum EPlayerState
+{
+    Live,
+    Death,
+}
 
 public class Player : MonoBehaviour, IPunObservable, IDamaged
 {
     public PlayerStat Stat;
+    public EPlayerState State = EPlayerState.Live;
 
     private Dictionary<Type, PlayerAbility> _abilitiesCache = new();
 
     private PlayerMoveAbility _myMoveAbility;
     private CharacterController _myCharacterController;
     private PhotonView _photonView;
+    private Animator _myAnimator;
 
     public ProgressBar StaminaBar;
     public ProgressBar HealthBar;
@@ -32,6 +42,9 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
         _myMoveAbility = GetComponent<PlayerMoveAbility>();
         _myCharacterController = GetComponent<CharacterController>();
         _photonView = GetComponent<PhotonView>();
+        _myAnimator = GetComponent<Animator>();
+
+        State = EPlayerState.Live;
     }
 
     private void Start()
@@ -172,9 +185,66 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
     [PunRPC]
     public void Damaged(float damage)
     {
+        if(State == EPlayerState.Death)
+        {
+            return;
+        }
+
         Stat.Health = Mathf.Max(0, Stat.Health - damage);
         HealthBar.CurrentValue = Stat.Health;
 
         Debug.Log($"남은 체력 : {Stat.Health}");
+
+        if(Stat.Health <= 0)
+        {
+            // 플레이어 죽음.
+            // 사망 애니메이션
+            // 움직이지 못한다.
+            // 5초 후에 체력과 스테미너 회복된 상태에서 랜덤한 위치에 리스폰
+
+            State = EPlayerState.Death;
+
+            StartCoroutine(Death_Coroutine());
+        }
+
+        if(_photonView.IsMine)
+        {
+            Debug.Log("카메라 흔들기");
+            CameraShaking.Instance.Shake(3f, 3f, 0.5f);
+        }
+    }
+
+    private IEnumerator Death_Coroutine()
+    {
+        _myCharacterController.enabled = false;
+
+        _photonView.RPC(nameof(DeathAnimation), RpcTarget.All);
+
+        yield return new WaitForSeconds(5f);
+
+        Respawn();
+    }
+
+    [PunRPC]
+    private void DeathAnimation()
+    {
+        _myAnimator.SetTrigger("Death");
+    }
+
+    private void Respawn()
+    {
+        Stat.Health = Stat.MaxHealth;
+        Stat.Stamina = Stat.MaxStamina;
+
+        StaminaBar.CurrentValue = Stat.Stamina;
+        HealthBar.CurrentValue = Stat.Health;
+
+        transform.position = SpawnPoints.Instance.GetRandomSpawnPoint();
+        
+        Debug.Log("부활");
+
+        State = EPlayerState.Live;
+        _myCharacterController.enabled = true;
+        _myAnimator.SetTrigger("Alive");
     }
 }

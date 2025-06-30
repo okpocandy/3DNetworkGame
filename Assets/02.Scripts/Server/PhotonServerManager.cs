@@ -13,8 +13,7 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
     // 즉, 유니티 이벤트와 PUN 서버 이벤트를 모두 받을 수 있다.
     private readonly string _gameVersion = "1.0.0";
     private string _nickname = "Laneze";
-
-    public List<Transform> SpawnPoints;
+    
 
     private void Start()
     {
@@ -110,7 +109,7 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         // 포톤에서는 게임 오브젝트 생성후 포톤 서버에 등록까지 해야 한다.
         // 게임 오브젝트 대신 프리팹 이름이 들어간다.
         // Resources 폴더 안에 있는 프리팹을 찾아서 생성한다.
-        Vector3 spawnPoint = SpawnPoints.Count > 0 ? SpawnPoints[Random.Range(0, SpawnPoints.Count)].position : Vector3.zero;
+        Vector3 spawnPoint = SpawnPoints.Instance.GetRandomSpawnPoint();
         PhotonNetwork.Instantiate("Player", spawnPoint, Quaternion.identity);
     }
 

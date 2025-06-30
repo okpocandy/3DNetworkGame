@@ -3900,7 +3900,7 @@ GameObject:
   - component: {fileID: 7373714989717469303}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4055,6 +4055,12 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 1
     Name: isGrounded
+  - Type: 9
+    SynchronizeType: 0
+    Name: Death
+  - Type: 9
+    SynchronizeType: 0
+    Name: Alive
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -4086,6 +4092,7 @@ MonoBehaviour:
     StaminaAttackCost: 20
     MaxHealth: 100
     Health: 100
+  State: 0
   StaminaBar: {fileID: 3571067119340210665}
   HealthBar: {fileID: 3695797654396907237}
   MiniMapEnemyIcon: {fileID: 7279445413482806923}

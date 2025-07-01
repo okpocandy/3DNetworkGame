@@ -29,7 +29,7 @@ public class PlayerAttackAbility : PlayerAbility
 
     private void Update()
     {
-        if(!_photonView.IsMine)
+        if(!_photonView.IsMine || _owner.State == EPlayerState.Death)
         {
             return;
         }
@@ -68,7 +68,7 @@ public class PlayerAttackAbility : PlayerAbility
     public void Hit(Collider other)
     {
         // 내 캐릭터가 아니면 무시
-        if(_photonView.IsMine == false)
+        if(_photonView.IsMine == false || _owner.State == EPlayerState.Death)
         {
             return;
         }

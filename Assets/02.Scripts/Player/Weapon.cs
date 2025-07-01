@@ -4,6 +4,8 @@ public class Weapon : MonoBehaviour
 {
     private PlayerAttackAbility _attackAbility;
 
+    public GameObject HitEffect;
+
     private void Start()
     {
         _attackAbility = GetComponentInParent<PlayerAttackAbility>();
@@ -22,6 +24,11 @@ public class Weapon : MonoBehaviour
         if(damagedObject != null)
         {
             _attackAbility.Hit(other);
+            
+            // 트리거 접촉 위치 추정
+            Vector3 hitPoint = other.ClosestPoint(transform.position);
+
+            Instantiate(HitEffect, hitPoint, Quaternion.identity);
         }
     }
 }

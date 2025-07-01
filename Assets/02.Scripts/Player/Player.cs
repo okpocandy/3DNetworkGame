@@ -206,6 +206,11 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
 
             StartCoroutine(Death_Coroutine());
         }
+        else
+        {
+            // RPC로 호출 X
+            GetAbility<PlayerShakeAbility>().Shake();
+        }
 
         if(_photonView.IsMine)
         {
@@ -239,14 +244,11 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
         StaminaBar.CurrentValue = Stat.Stamina;
         HealthBar.CurrentValue = Stat.Health;
 
-        // PhotonView 비활성화로 네트워크 동기화 중단
-        _photonView.enabled = false;
-        
-        // 위치 변경
-        transform.position = SpawnPoints.Instance.GetRandomSpawnPoint();
-        
-        // 충분한 시간 후 PhotonView 재활성화
-        StartCoroutine(Respawn_Coroutine());
+        if(_photonView.IsMine)
+        {
+            // 위치 변경
+            transform.position = SpawnPoints.Instance.GetRandomSpawnPoint();
+        }
         
         Debug.Log("부활");
 
@@ -255,12 +257,4 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
         _myAnimator.SetTrigger("Alive");
     }
 
-    private IEnumerator Respawn_Coroutine()
-    {
-        // 1초 대기 (네트워크 지연 고려)
-        yield return new WaitForSeconds(1f);
-        
-        // PhotonView 재활성화
-        _photonView.enabled = true;
-    }
 }

@@ -3898,6 +3898,7 @@ GameObject:
   - component: {fileID: 8808330218733523718}
   - component: {fileID: 5204340404810333318}
   - component: {fileID: 3427066522951581516}
+  - component: {fileID: 5609556242650819154}
   - component: {fileID: 7373714989717469303}
   m_Layer: 0
   m_Name: Player
@@ -4139,6 +4140,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponCollider: {fileID: 580358840949993524}
   _attackTimer: 0
+--- !u!114 &5609556242650819154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8430068448868891489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df2fab967e65c3c43a1e825e82afdb14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 9103755770023986159}
+  Strength: 0.2
+  Duration: 0.8
 --- !u!114 &7373714989717469303
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -76,7 +76,7 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
 
         // 룸 생성
         // 룸을 생성한 유저는 자동으로 해당 룸에 입장하고 OnJoinedRoom 콜백 함수가 호출
-        PhotonNetwork.CreateRoom("text", roomOptions);
+        PhotonNetwork.CreateRoom("test", roomOptions);
     }
 
     // 룸 생성이 완료된 후 호출되는 콜백 함수
@@ -104,13 +104,6 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         Debug.Log($"{player.Value.NickName} : {player.Value.ActorNumber}");
         // ActorNumber = Room안에서의 플레이어에 대한 판별 ID - 들어온 순서대로 매겨짐짐
         }
-
-        // 방에 입장 완료가되면 플레이어를 생성한다.
-        // 포톤에서는 게임 오브젝트 생성후 포톤 서버에 등록까지 해야 한다.
-        // 게임 오브젝트 대신 프리팹 이름이 들어간다.
-        // Resources 폴더 안에 있는 프리팹을 찾아서 생성한다.
-        Vector3 spawnPoint = SpawnPoints.Instance.GetRandomSpawnPoint();
-        PhotonNetwork.Instantiate("Player", spawnPoint, Quaternion.identity);
     }
 
 }

@@ -2,9 +2,9 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class CameraShaking : MonoBehaviour
+public class CameraShaking_Noise : MonoBehaviour
 {
-    public static CameraShaking Instance;
+    public static CameraShaking_Noise Instance;
     public CinemachineCamera MyCamera;
     private CinemachineBasicMultiChannelPerlin _noise;
 

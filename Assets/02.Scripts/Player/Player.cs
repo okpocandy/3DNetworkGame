@@ -210,7 +210,7 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
         if(_photonView.IsMine)
         {
             Debug.Log("카메라 흔들기");
-            CameraShaking.Instance.Shake(3f, 3f, 0.5f);
+            CameraShaking_Noise.Instance.Shake(3f, 3f, 0.5f);
         }
     }
 

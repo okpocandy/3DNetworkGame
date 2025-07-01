@@ -183,7 +183,7 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
     }
 
     [PunRPC]
-    public void Damaged(float damage)
+    public void Damaged(float damage, int actorNumber)
     {
         if(State == EPlayerState.Death)
         {
@@ -205,6 +205,9 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
             State = EPlayerState.Death;
 
             StartCoroutine(Death_Coroutine());
+
+            RoomManager.Instance.OnPlayerDeath(_photonView.Owner.ActorNumber, actorNumber);
+
         }
         else
         {

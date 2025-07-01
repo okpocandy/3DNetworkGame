@@ -11,6 +11,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public event Action OnRoomDataChanged;
     public event Action<string> OnPlayerEntered;
     public event Action<string> OnPlayerExited;
+    public event Action<string, string> OnPlayerDeathEvent;
 
     public static RoomManager Instance { get; private set; }
 
@@ -50,6 +51,27 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         OnRoomDataChanged?.Invoke();
         OnPlayerExited?.Invoke(otherPlayer.NickName + "_" + otherPlayer.ActorNumber);
+    }
+
+    public void OnPlayerDeath(int actorNumber, int killerActorNumber)
+    {
+        // actorNumber가 killerActorNumber에 의해 죽었다.
+        string diedNickname = _room.GetPlayer(actorNumber).NickName;
+        string killerNickname = _room.GetPlayer(killerActorNumber).NickName;
+        if(diedNickname != null)
+        {
+            diedNickname = diedNickname + "_" + actorNumber;
+        }
+        if(killerNickname == null)
+        {
+            killerNickname = "데드존";
+        }
+        else
+        {
+            killerNickname = killerNickname + "_" + killerActorNumber;
+        }
+
+        OnPlayerDeathEvent?.Invoke(diedNickname, killerNickname);
     }
 
     private void GeneratePlayer()

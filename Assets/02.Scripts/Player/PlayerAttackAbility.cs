@@ -81,7 +81,8 @@ public class PlayerAttackAbility : PlayerAbility
 
         // 데미지를 받는 오브젝트의 데미지 처리
         if(other.GetComponent<IDamaged>() == null) return;
+
         PhotonView otherPhotonView = other.GetComponent<PhotonView>();
-        otherPhotonView.RPC(nameof(Player.Damaged), RpcTarget.All, _owner.Stat.Damage);
+        otherPhotonView.RPC(nameof(Player.Damaged), RpcTarget.All, _owner.Stat.Damage, _photonView.Owner.ActorNumber);
     }
 }

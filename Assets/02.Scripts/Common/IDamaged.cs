@@ -1,5 +1,5 @@
 
 public interface IDamaged
 {
-    public void Damaged(float damage);
+    public void Damaged(float damage, int actorNumber);
 }

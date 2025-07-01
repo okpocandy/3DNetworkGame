@@ -12,7 +12,7 @@ public class DeadZone : MonoBehaviour
             }
             Debug.Log("DeadZone");
 
-            player.Damaged(999999999);
+            player.Damaged(999999999, 999);
         }
     }
 }

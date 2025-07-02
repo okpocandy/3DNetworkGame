@@ -6,7 +6,9 @@ public enum EItemType
 {
     Score,
     Health,
-    Stamina
+    Stamina,
+
+    Count,
 }
 
 [RequireComponent(typeof(PhotonView))]

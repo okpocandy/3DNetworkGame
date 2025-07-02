@@ -25,6 +25,7 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
     private PlayerMoveAbility _myMoveAbility;
     private CharacterController _myCharacterController;
     private PhotonView _photonView;
+    public PhotonView PhotonView => _photonView;
     private Animator _myAnimator;
 
     public ProgressBar StaminaBar;

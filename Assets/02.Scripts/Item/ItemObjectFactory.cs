@@ -9,12 +9,28 @@ public class ItemObjectFactory : MonoBehaviourPun
     public static ItemObjectFactory Instance => _instance;
 
     private PhotonView _photonView;
+    private float _timer = 0f;
+    public float ItemCreateInterval = 5f;
+    public Vector3 ItemCreatePosition;
 
     private void Awake()
     {
         _instance = this;
         
         _photonView = GetComponent<PhotonView>();
+    }
+
+    private void Update()
+    {
+        _timer += Time.deltaTime;
+        if (_timer >= ItemCreateInterval)
+        {
+            _timer = 0f;
+            RequestCreate((EItemType)Random.Range(0, (int)EItemType.Count),
+             new Vector3(Random.Range(-ItemCreatePosition.x, ItemCreatePosition.x),
+             ItemCreatePosition.y,
+             Random.Range(-ItemCreatePosition.z, ItemCreatePosition.z)));
+        }
     }
 
     public void RequestCreate(EItemType itemType, Vector3 dropPosition)

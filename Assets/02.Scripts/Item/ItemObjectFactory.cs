@@ -50,8 +50,19 @@ public class ItemObjectFactory : MonoBehaviourPun
     [PunRPC]
     private void Delete(int viewId)
     {
-        GameObject objectToDelete = PhotonView.Find(viewId).gameObject;
-        if (objectToDelete == null) return;
+        PhotonView photonView = PhotonView.Find(viewId);
+        if (photonView == null)
+        {
+            Debug.LogWarning($"PhotonView with ID {viewId} not found. Item may have already been destroyed.");
+            return;
+        }
+        
+        GameObject objectToDelete = photonView.gameObject;
+        if (objectToDelete == null)
+        {
+            Debug.LogWarning($"GameObject for PhotonView {viewId} is null.");
+            return;
+        }
         
         PhotonNetwork.Destroy(objectToDelete);
     }

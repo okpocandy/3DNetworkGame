@@ -4095,6 +4095,7 @@ MonoBehaviour:
     MaxHealth: 100
     Health: 100
   State: 0
+  Score: 0
   StaminaBar: {fileID: 3571067119340210665}
   HealthBar: {fileID: 3695797654396907237}
   MiniMapEnemyIcon: {fileID: 7279445413482806923}

@@ -4,7 +4,6 @@ using System;
 using Unity.Mathematics;
 using RainbowArt.CleanFlatUI;
 using Photon.Pun;
-using Unity.VisualScripting;
 using System.Collections;
 
 public enum EPlayerState
@@ -13,10 +12,13 @@ public enum EPlayerState
     Death,
 }
 
+[RequireComponent(typeof(PlayerMoveAbility))]
 public class Player : MonoBehaviour, IPunObservable, IDamaged
 {
     public PlayerStat Stat;
     public EPlayerState State = EPlayerState.Live;
+
+    public int Score = 0;
 
     private Dictionary<Type, PlayerAbility> _abilitiesCache = new();
 
@@ -30,6 +32,8 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
 
     public GameObject MiniMapEnemyIcon;
     public GameObject MiniMapPlayerIcon;
+
+    public ItemData ItemData;
 
     
 
@@ -45,6 +49,8 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
         _myAnimator = GetComponent<Animator>();
 
         State = EPlayerState.Live;
+        ItemData = new ItemData();
+
     }
 
     private void Start()
@@ -164,6 +170,16 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
         StaminaBar.CurrentValue = Stat.Stamina;
     }
 
+    public void RecoverHealth(float amount)
+    {
+        if(amount < 0)
+        {
+            throw new Exception("체력 회복량이 0보다 작을 수 없다.");
+        }
+        Stat.Health = math.min(Stat.Health + amount, Stat.MaxHealth);
+        HealthBar.CurrentValue = Stat.Health;
+    }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if(stream.IsWriting && _photonView.IsMine)
@@ -202,11 +218,18 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
             // 움직이지 못한다.
             // 5초 후에 체력과 스테미너 회복된 상태에서 랜덤한 위치에 리스폰
 
+            // 아이템 생성
+
             State = EPlayerState.Death;
 
             StartCoroutine(Death_Coroutine());
 
             RoomManager.Instance.OnPlayerDeath(_photonView.Owner.ActorNumber, actorNumber);
+
+            if (_photonView.IsMine)
+            {
+                MakeItems(UnityEngine.Random.Range(1, 4));
+            }
 
         }
         else
@@ -260,4 +283,23 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
         _myAnimator.SetTrigger("Alive");
     }
 
+    private void MakeItems(int count)
+    {
+        for (int i=0; i<count; i++)
+        {
+            float randomNumber = UnityEngine.Random.value;
+            if(randomNumber < ItemData.HealthItemProbability)
+            {
+                ItemObjectFactory.Instance.RequestCreate(EItemType.Health, transform.position + new Vector3(0, 1, 0));
+            }
+            else if(randomNumber < ItemData.HealthItemProbability + ItemData.StaminaItemProbability)
+            {
+                ItemObjectFactory.Instance.RequestCreate(EItemType.Stamina, transform.position + new Vector3(0, 1, 0));
+            }
+            else
+            {
+                ItemObjectFactory.Instance.RequestCreate(EItemType.Score, transform.position + new Vector3(0, 1, 0));
+            }
+        }
+    }
 }

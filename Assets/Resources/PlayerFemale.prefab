@@ -1164,7 +1164,7 @@ MonoBehaviour:
   - {fileID: 816229436599617480}
   - {fileID: 8150073426511572525}
   - {fileID: 3311927462640047243}
-  - {fileID: 0}
+  - {fileID: 4537199884317356575}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1307,7 +1307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88efdc6a81d0754196e8c60081ea166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WeaponCollider: {fileID: 0}
+  WeaponCollider: {fileID: 1728073984722317855}
   _attackTimer: 0
 --- !u!114 &5609556242650819154
 MonoBehaviour:
@@ -1321,7 +1321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df2fab967e65c3c43a1e825e82afdb14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 0}
+  Target: {fileID: 5285329442904121038}
   Strength: 0.2
   Duration: 0.8
 --- !u!114 &7373714989717469303

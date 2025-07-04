@@ -27,9 +27,26 @@ public class RoomManager : MonoBehaviourPunCallbacks
         // DontDestroyOnLoad(gameObject); // 씬 전환 시 유지
     }
 
-    // '내가' 방에 입장하면 자동으로 호출되는 함수
+    bool _initialized = false;
+
     public override void OnJoinedRoom()
     {
+        Init();
+    }
+
+    private void Start()
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        if(_initialized)
+        {
+            return;
+        }
+
+        _initialized = true;
         // 플레이어 생성
         GeneratePlayer();
 
@@ -81,7 +98,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         // 게임 오브젝트 대신 프리팹 이름이 들어간다.
         // Resources 폴더 안에 있는 프리팹을 찾아서 생성한다.
         Vector3 spawnPoint = SpawnPoints.Instance.GetRandomSpawnPoint();
-        PhotonNetwork.Instantiate("Player", spawnPoint, Quaternion.identity);
+        PhotonNetwork.Instantiate($"Player{LobbyScene.SelectedCharacterType}", spawnPoint, Quaternion.identity);
     }
 
     private void SetRoom()

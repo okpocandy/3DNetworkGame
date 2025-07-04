@@ -1194,7 +1194,6 @@ GameObject:
   - component: {fileID: 3872994624112279621}
   - component: {fileID: 580358840949993524}
   - component: {fileID: 1296404404594209671}
-  - component: {fileID: 1400244840403380198}
   - component: {fileID: 6826204798293639894}
   m_Layer: 0
   m_Name: OHS03
@@ -1306,29 +1305,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HitEffect: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   SizeMultiplier: 0.5
---- !u!114 &1400244840403380198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3368508245795299728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 2
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 6826204798293639894}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &6826204798293639894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3943,7 +3919,7 @@ GameObject:
   - component: {fileID: 5609556242650819154}
   - component: {fileID: 7373714989717469303}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerMale
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4033,7 +4009,7 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 2
   OwnershipTransfer: 0
-  observableSearch: 2
+  observableSearch: 1
   ObservedComponents:
   - {fileID: 816229436599617480}
   - {fileID: 8150073426511572525}

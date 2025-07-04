@@ -12,8 +12,23 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
     // MonoBehaviourPunCallbacks : 유니티 이벤트 말고도 PUN 서버 이벤트를 받을 수 있다.
     // 즉, 유니티 이벤트와 PUN 서버 이벤트를 모두 받을 수 있다.
     private readonly string _gameVersion = "1.0.0";
-    private string _nickname = "Laneze";
     
+    private static PhotonServerManager _instance;
+    public static PhotonServerManager Instance => _instance;
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -24,8 +39,6 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         
         // 1. 버전 : 버전이 다르면 다른 서버로 접속이 된다.
         PhotonNetwork.GameVersion = _gameVersion;
-        // 2. 닉네임 : 게임에서 사용할 사용자의 별명(중복 가능)
-        PhotonNetwork.NickName = _nickname;
 
         // 방장이 로드한 씬으로 다른 참여자가 똑같이 이동하게끔 동기화 해주는 옵션
         // 방장: 방은 만ㄷ느 소유자이자 "마스터 클라이언트" (방마다 한명의 마스터 클라이언트가 존재)
@@ -60,13 +73,15 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         Debug.Log($"InLobby: {PhotonNetwork.InLobby}"); // 로비 입장 유무
 
         // 랜덤 방에 들어간다. 
-        PhotonNetwork.JoinRandomRoom();
+        // PhotonNetwork.JoinRandomRoom();
     }
 
     // 랜덤 룸 입장에 실패했을 경우 호출되는 콜백 함수
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.Log($"랜덤 방 입장에 실패했습니다: {returnCode}:{message}");
+
+        return;
 
         // 룸 속성 정의
         RoomOptions roomOptions = new RoomOptions();
@@ -97,12 +112,11 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         Debug.Log($"방 입장 완료! {PhotonNetwork.InRoom} {PhotonNetwork.CurrentRoom.Name}");
         Debug.Log($"플레이어 : {PhotonNetwork.CurrentRoom.PlayerCount}명");
 
-        // 룸에 접속한 사용자 정보
-        Dictionary<int, Photon.Realtime.Player> roomPlayers = PhotonNetwork.CurrentRoom.Players;
-        foreach (KeyValuePair<int, Photon.Realtime.Player> player in roomPlayers)
+        // 방장만 이동하면 다른 사람들도 자동으로 이동해준다.
+        // 위에서 AutomaticallySycnScene = true로 설정했기 때문이다.
+        if (PhotonNetwork.IsMasterClient)
         {
-        Debug.Log($"{player.Value.NickName} : {player.Value.ActorNumber}");
-        // ActorNumber = Room안에서의 플레이어에 대한 판별 ID - 들어온 순서대로 매겨짐짐
+            PhotonNetwork.LoadLevel("Battle");
         }
     }
 

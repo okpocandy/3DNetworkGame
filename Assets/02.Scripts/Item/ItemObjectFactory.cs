@@ -22,14 +22,19 @@ public class ItemObjectFactory : MonoBehaviourPun
 
     private void Update()
     {
+        if(!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+        
         _timer += Time.deltaTime;
         if (_timer >= ItemCreateInterval)
         {
             _timer = 0f;
             RequestCreate((EItemType)Random.Range(0, (int)EItemType.Count),
-             new Vector3(Random.Range(-ItemCreatePosition.x, ItemCreatePosition.x),
-             ItemCreatePosition.y,
-             Random.Range(-ItemCreatePosition.z, ItemCreatePosition.z)));
+            new Vector3(Random.Range(-ItemCreatePosition.x, ItemCreatePosition.x),
+            ItemCreatePosition.y,
+            Random.Range(-ItemCreatePosition.z, ItemCreatePosition.z)));
         }
     }
 

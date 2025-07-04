@@ -18,7 +18,6 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
     public PlayerStat Stat;
     public EPlayerState State = EPlayerState.Live;
 
-    public int Score = 0;
 
     private Dictionary<Type, PlayerAbility> _abilitiesCache = new();
 
@@ -219,19 +218,33 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
             // 움직이지 못한다.
             // 5초 후에 체력과 스테미너 회복된 상태에서 랜덤한 위치에 리스폰
 
-            // 아이템 생성
-
             State = EPlayerState.Death;
 
             StartCoroutine(Death_Coroutine());
 
-            RoomManager.Instance.OnPlayerDeath(_photonView.Owner.ActorNumber, actorNumber);
+
 
             if (_photonView.IsMine)
             {
-                MakeItems(UnityEngine.Random.Range(1, 4));
-            }
 
+                if(actorNumber == 999)
+                {
+                    return;
+                }
+
+                RoomManager.Instance.OnPlayerDeath(_photonView.Owner.ActorNumber, actorNumber);
+
+                // 날 죽인 사람 킬 카운트 증가
+                // 점수 증가
+                var killerPlayer = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+                _photonView.RPC(nameof(AddKillCount), killerPlayer);
+
+                int score = ScoreManager.Instance.Score/2;
+                MakeItems((ScoreManager.Instance.Score - score)/1000);
+                _photonView.RPC(nameof(AddScore), killerPlayer, score);
+                ScoreManager.Instance.ResetScore();
+                ScoreManager.Instance.AddScore(0);
+            }
         }
         else
         {
@@ -302,5 +315,23 @@ public class Player : MonoBehaviour, IPunObservable, IDamaged
                 ItemObjectFactory.Instance.RequestCreate(EItemType.Score, transform.position + new Vector3(0, 1, 0));
             }
         }
+    }
+
+    [PunRPC]
+    public void AddKillCount()
+    {
+        ScoreManager.Instance.AddKillCount();
+    }
+
+    [PunRPC]
+    public void AddScore(int addedScore)
+    {
+        ScoreManager.Instance.AddScore(addedScore);
+    }
+
+    [PunRPC]
+    public void ResetScore()
+    {
+        ScoreManager.Instance.ResetScore();
     }
 }

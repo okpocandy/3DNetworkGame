@@ -24,7 +24,6 @@ public class EnemyTraceState : EnemyStateBase
     // 플레이어가 추적이 풀릴 때까지 목표 플레이어를 변경하지 안는다.
     public override void Update()
     {
-        Debug.Log("Tracing player...");
         // 플레이어 추적 이동 코드
 
         // 일정 시간마다 가장 목표로 바꾼다.
@@ -35,10 +34,21 @@ public class EnemyTraceState : EnemyStateBase
             _newTargetTimer = 0f;
         }
 
+        if(stateMachine.Player == null)
+        {
+            stateMachine.FindClosestPlayer();
+        }
+
         stateMachine.Agent.SetDestination(stateMachine.Player.position);
 
         // 플레이어가 죽으면 순찰로 전환
         Player targetPlayer = stateMachine.Player.GetComponent<Player>();
+        if(targetPlayer == null)
+        {
+            ChangeState(EnemyState.Patrol);
+            return;
+        }
+
         if (targetPlayer.State == EPlayerState.Death)
         {
             ChangeState(EnemyState.Patrol);

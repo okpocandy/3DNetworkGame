@@ -25,7 +25,14 @@ public abstract class ItemObject : MonoBehaviourPun
         
         if (other.CompareTag("Player"))
         {
+            
             Player player = other.GetComponent<Player>();
+            // 내 플레이어가 아니면 리턴한다.
+            if (!player.GetComponent<PhotonView>().IsMine)
+            {
+                return;
+            }
+
             if(player.State == EPlayerState.Death)
             {
                 return;

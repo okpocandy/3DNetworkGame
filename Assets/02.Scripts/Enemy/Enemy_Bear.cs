@@ -40,7 +40,7 @@ public class Enemy_Bear : MonoBehaviourPun, IDamaged
             {
                 Player player = collider.GetComponent<Player>();
                 //player.PhotonView.RPC(nameof(Player.Damaged), RpcTarget.All, AttackDamage, photonView.Owner.ActorNumber);
-                player.Damaged(AttackDamage, PhotonView.Owner.ActorNumber);
+                player.Damaged(AttackDamage, 999);
             }
         }
     }
